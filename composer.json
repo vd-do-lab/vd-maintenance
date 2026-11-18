@@ -3,6 +3,13 @@
     "description": "Projektunabhängige TYPO3-Wartungs-Commands: Backup und Restore von Datenbank, fileadmin/ und frei konfigurierbaren Verzeichnissen",
     "type": "typo3-cms-extension",
     "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Valeri Dutt",
+            "email": "valeridutt@googlemail.com",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "php": "^8.4",
         "typo3/cms-core": "^14.0",

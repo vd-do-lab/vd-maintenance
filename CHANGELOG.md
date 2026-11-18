@@ -7,6 +7,23 @@ die Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
 
 ## [Unreleased]
 
+## [1.0.1] — 2026-11-18
+
+### Hinzugefügt
+
+- `authors` in `composer.json`. Rein beschreibend — Composer verlangt für
+  eine Veröffentlichung nur `name` und `description`, `license` ist eine
+  Empfehlung. Die Angabe erleichtert Dritten die Zuordnung und
+  Kontaktaufnahme.
+
+### Geändert
+
+- Das Repository `vd-do-lab/vd-maintenance` ist jetzt öffentlich. Damit
+  benötigen weder eine lokale Installation noch eine CI Zugangsdaten, um das
+  Paket zu beziehen. Geprüft wurde zuvor der veröffentlichte Stand: keine
+  Zugangsdaten, Hostnamen oder Schlüssel in Inhalt und Historie; das Paket
+  enthält keine Geschäftslogik und keine Daten.
+
 ## [1.0.0] — 2026-11-18
 
 Erstes Release als eigenständiges Composer-Paket. Die Extension war zuvor
@@ -68,5 +85,6 @@ Funktionsumfang vollständig und erprobt ist.
   einspielbar. Ohne jede Konfiguration arbeiten die Alias-Commands auf
   `<projekt>/import` weiter.
 
-[Unreleased]: https://github.com/vd-do-lab/vd-maintenance/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/vd-do-lab/vd-maintenance/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/vd-do-lab/vd-maintenance/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/vd-do-lab/vd-maintenance/releases/tag/v1.0.0
