@@ -11,10 +11,21 @@ Installation einbinden.
 composer require vd/vd-maintenance
 ```
 
-> Noch nicht veröffentlicht. Bis das eigenständige Repository steht (Phase 3
-> der Paket-Planung im Entwicklungs-Monorepo), wird die Extension als
-> Pfad-Paket eingebunden. Danach genügt im Zielprojekt zusätzlich ein
-> `repositories`-Eintrag auf das private Repository.
+Das Paket liegt in einem privaten Repository, also braucht das Zielprojekt
+zusätzlich einen `repositories`-Eintrag:
+
+```json
+{
+    "repositories": [
+        { "type": "vcs", "url": "https://github.com/vd-do-lab/vd-maintenance.git" }
+    ]
+}
+```
+
+Composer greift bei privaten GitHub-Repositories auf SSH zurück, auch wenn eine
+HTTPS-URL konfiguriert ist. Ohne hinterlegten SSH-Key oder `github-oauth`-Token
+bricht die Installation mit `Permission denied (publickey)` ab — eine bestehende
+`gh`-Anmeldung allein genügt dafür nicht.
 
 ## Commands
 
