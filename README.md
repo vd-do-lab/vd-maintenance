@@ -1,6 +1,6 @@
 # vd_maintenance
 
-Projektweite Backup/Restore-Commands für `app.do` (Datenbank, `webapp/import/`, `webapp/public/fileadmin/`) — leben hier statt in `vd_budget`/`vd_weather`, da sie z. B. auch TYPO3-Core-Tabellen betreffen und zu keiner der beiden fachlichen Extensions gehören.
+Projektunabhängige Backup/Restore-Commands (Datenbank, `fileadmin/`, frei konfigurierbare Verzeichnisse) — leben hier statt in `vd_budget`/`vd_weather`, da sie z. B. auch TYPO3-Core-Tabellen betreffen und zu keiner der beiden fachlichen Extensions gehören.
 
 ## Commands
 
@@ -8,8 +8,9 @@ Alle Export-Commands schreiben nach `backup/` (Geschwisterverzeichnis der TYPO3-
 
 - `maintenance:database-export` — exportiert die komplette Datenbank als datierten, komprimierten `mysqldump`.
 - `maintenance:database-import <datei>` — importiert einen damit erzeugten Dump (Tabelle für Tabelle, kein `DROP DATABASE`).
-- `maintenance:import-folder-export` — packt `webapp/import/` (vd_budgets Kontoauszug-Rohdaten) als `.tar.gz`.
-- `maintenance:import-folder-import <datei>` — spielt ein solches Archiv wieder nach `webapp/import/` ein (überschreibt nur gleichnamige Dateien, löscht nichts vorab).
+- `maintenance:folder-export <name>` — packt ein konfiguriertes Verzeichnis als `<name>-folder-<Datum>.tar.gz`; `--list` zeigt die konfigurierten Namen samt Pfad.
+- `maintenance:folder-import <name> <datei>` — spielt ein solches Archiv wieder dorthin ein (überschreibt nur gleichnamige Dateien, löscht nichts vorab).
+- `maintenance:import-folder-export` / `-import <datei>` — Aliase für die beiden obigen mit dem Namen `import`. Bleiben erhalten, weil sie in Betriebsabläufen verankert sind.
 - `maintenance:fileadmin-export` — packt `webapp/public/fileadmin/` (Redakteurs-Uploads) als `.tar.gz`.
 - `maintenance:fileadmin-import <datei>` — spielt ein solches Archiv wieder nach `webapp/public/fileadmin/` ein (gleiches Verhalten wie oben).
 
@@ -23,4 +24,22 @@ Die lokale Datenbank ist als `db:3306` (Docker-interner Hostname) konfiguriert �
 
 Details und Hintergrund siehe [Planung: Backup/Restore](../../../docs/09-backup-restore/README.md).
 
-Diese Extension ist bewusst **nicht** für eine eigenständige Extraktion/Veröffentlichung vorgesehen (anders als `vd_budget`/`vd_weather`, siehe [Paket-Extraktions-Planung](../../../docs/08-package-extraktion/README.md)) — sie existiert ausschließlich für dieses Projekt.
+## Konfiguration
+
+Welche Verzeichnisse `folder-export`/`folder-import` anfassen dürfen, legt das einbindende Projekt fest — in `config/system/settings.php`:
+
+```php
+'EXTENSIONS' => [
+    'vd_maintenance' => [
+        'directories' => 'import:import, scans:var/scans',
+    ],
+],
+```
+
+Kommagetrennte `name:pfad`-Paare. Die Kurzform `import` entspricht `import:import`. Jeder Pfad wird relativ zum Projektverzeichnis (`Environment::getProjectPath()`) aufgelöst und muss darin liegen; ein absoluter oder herausführender Pfad wird mit einer klaren Meldung abgewiesen, statt an unerwarteter Stelle zu schreiben.
+
+Ohne Konfiguration bleiben `database-*` und `fileadmin-*` voll funktionsfähig; `folder-export --list` meldet dann, dass nichts konfiguriert ist. Die beiden `import-folder-*`-Aliase arbeiten auch dann weiter und greifen auf `<projekt>/import` zurück.
+
+## Wiederverwendung in anderen Projekten
+
+Die Extension kennt kein konkretes Projekt mehr. Der Weg in ein eigenes Repository und die Einbindung per Composer-VCS-Repository ist in [Planung 19](../../../docs/0-planning/19-vd-maintenance-paket/README.md) beschrieben (Phasen 2–4, noch nicht umgesetzt).

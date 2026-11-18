@@ -1,0 +1,2 @@
+# cat=basic//10; type=string; label=Verzeichnisse: Kommagetrennte Liste von "name:pfad"-Paaren, die maintenance:folder-export/-import sichern und wiederherstellen dürfen. Jeder Pfad ist relativ zum Projektverzeichnis (Environment::getProjectPath()) und muss darin liegen. Beispiel: import:import, scans:var/scans
+directories =
