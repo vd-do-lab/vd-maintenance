@@ -16,7 +16,7 @@ use Vd\VdMaintenance\Service\DirectoryArchiver;
 
 #[AsCommand(
     name: 'maintenance:fileadmin-export',
-    description: 'Packt webapp/public/fileadmin/ (Redakteurs-Uploads) als datiertes .tar.gz nach backup/.'
+    description: 'Packt fileadmin/ (Redakteurs-Uploads) als datiertes .tar.gz nach backup/.'
 )]
 final class FileadminExportCommand extends Command
 {

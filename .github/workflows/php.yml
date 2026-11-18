@@ -1,0 +1,64 @@
+name: PHP
+
+# Dieser Workflow gilt für das eigenständige Repository vd-do-lab/vd-maintenance.
+# Innerhalb des Entwicklungs-Monorepos ist er wirkungslos, weil GitHub Actions
+# ausschließlich .github/workflows/ im Repository-Root auswertet - dort liegt
+# die kombinierte Konfiguration, die alle Pakete gemeinsam prüft.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: php-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Tests & Security-Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v5
+
+      - name: PHP-Version aus composer.json ermitteln
+        id: php-version
+        # Single Source of Truth: composer.json -> require.php. Anders als im
+        # Monorepo gibt es hier kein config.platform.php - ein Bibliothekspaket
+        # legt die Plattform nicht fest, sondern deklariert nur, was es braucht.
+        # Getestet wird daher gegen die Mindestversion.
+        run: echo "version=$(jq -r '.require.php' composer.json | tr -d '^')" >> "$GITHUB_OUTPUT"
+
+      - name: PHP einrichten
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ steps.php-version.outputs.version }}
+          extensions: mbstring, intl, pdo, pdo_sqlite, sqlite3, gd, zip, sodium
+          coverage: none
+
+      - name: Composer-Cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/composer
+          # Dieses Paket versioniert bewusst keine composer.lock (Bibliothek,
+          # kein Projekt). Der Cache-Key hängt daher an composer.json.
+          key: composer-${{ runner.os }}-${{ hashFiles('composer.json') }}
+          restore-keys: composer-${{ runner.os }}-
+
+      - name: Composer-Dependencies installieren
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Unit-Tests
+        run: php vendor/bin/phpunit -c Build/phpunit/UnitTests.xml
+
+      - name: Functional-Tests
+        run: php vendor/bin/phpunit -c Build/phpunit/FunctionalTests.xml
+
+      - name: Composer-Security-Audit
+        run: composer audit

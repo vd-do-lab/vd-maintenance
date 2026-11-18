@@ -18,7 +18,7 @@ use Vd\VdMaintenance\Service\DirectoryArchiver;
 
 #[AsCommand(
     name: 'maintenance:fileadmin-import',
-    description: 'Spielt ein mit maintenance:fileadmin-export erzeugtes .tar.gz-Archiv in webapp/public/fileadmin/ ein.'
+    description: 'Spielt ein mit maintenance:fileadmin-export erzeugtes .tar.gz-Archiv in fileadmin/ ein.'
 )]
 final class FileadminImportCommand extends Command
 {
@@ -44,7 +44,7 @@ final class FileadminImportCommand extends Command
             'Sicherheitsabfrage überspringen (z. B. für Automatisierung)'
         );
         $this->setHelp(
-            'Entpackt das Archiv nach webapp/public/fileadmin/ - im Archiv enthaltene Dateien überschreiben '
+            'Entpackt das Archiv nach fileadmin/ - im Archiv enthaltene Dateien überschreiben '
                 . 'gleichnamige vorhandene Dateien, bereits vorhandene Dateien, die nicht im Archiv enthalten '
                 . 'sind, bleiben unangetastet (kein Löschen des gesamten Verzeichnisses vorab).'
         );
